@@ -35,13 +35,32 @@ router.post('/seed', async (req: Request, res: Response) => {
     const { default: Resource } = await import('../models/Resource');
     const { default: Settings } = await import('../models/Settings');
 
-    // Clear collections
-    console.log('🧹 Clearing existing data...');
+    // Clear collections and drop indexes to reset unique constraints
+    console.log('🧹 Clearing existing data and resetting indexes...');
     try {
-      await User.deleteMany({}).exec();
-      await Employee.deleteMany({}).exec();
-      await Resource.deleteMany({}).exec();
-      await Settings.deleteMany({}).exec();
+      // Delete all documents
+      await User.deleteMany({});
+      await Employee.deleteMany({});
+      await Resource.deleteMany({});
+      await Settings.deleteMany({});
+      
+      // Drop all indexes (except _id) to reset unique constraints
+      try {
+        await User.collection.dropIndexes();
+        await Employee.collection.dropIndexes();
+        await Resource.collection.dropIndexes();
+        await Settings.collection.dropIndexes();
+      } catch (indexError) {
+        console.log('ℹ️ Index drop note:', (indexError as Error).message);
+      }
+      
+      // Recreate default indexes
+      await User.syncIndexes();
+      await Employee.syncIndexes();
+      await Resource.syncIndexes();
+      await Settings.syncIndexes();
+      
+      console.log('✅ Collections cleared and indexes reset');
     } catch (clearError) {
       console.log('⚠️ Error clearing collections (continuing):', clearError);
     }
