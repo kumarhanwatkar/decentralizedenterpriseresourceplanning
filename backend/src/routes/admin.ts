@@ -196,6 +196,7 @@ router.post('/seed', async (req: Request, res: Response) => {
     // Create resources
     const resourcesData = [
       {
+        resourceId: 'RES001',
         name: 'Server Node 1',
         type: 'server',
         department: 'Infrastructure',
@@ -206,6 +207,7 @@ router.post('/seed', async (req: Request, res: Response) => {
         location: 'Data Center A',
       },
       {
+        resourceId: 'RES002',
         name: 'GPU Cluster',
         type: 'machine',
         department: 'Engineering',
@@ -216,6 +218,7 @@ router.post('/seed', async (req: Request, res: Response) => {
         location: 'Lab 2',
       },
       {
+        resourceId: 'RES003',
         name: 'Load Balancer',
         type: 'equipment',
         department: 'Infrastructure',
@@ -226,6 +229,7 @@ router.post('/seed', async (req: Request, res: Response) => {
         location: 'Data Center B',
       },
       {
+        resourceId: 'RES004',
         name: 'Database Server',
         type: 'server',
         department: 'Infrastructure',
@@ -236,6 +240,7 @@ router.post('/seed', async (req: Request, res: Response) => {
         location: 'Data Center A',
       },
       {
+        resourceId: 'RES005',
         name: 'Development Workstation',
         type: 'machine',
         department: 'Engineering',
