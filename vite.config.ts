@@ -27,5 +27,5 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false
   },
-  base: process.env.VITE_BASE_PATH || '/'
+  base: process.env.VITE_BASE_PATH || '/decentralizedenterpriseresourceplanning/',
 })
