@@ -35,49 +35,39 @@ router.post('/seed', async (req: Request, res: Response) => {
     const { default: Resource } = await import('../models/Resource');
     const { default: Settings } = await import('../models/Settings');
 
-    // Clear collections and drop indexes to reset unique constraints
-    console.log('🧹 Clearing existing data and resetting indexes...');
+    // Clear collections - delete all documents
+    console.log('🧹 Clearing existing data...');
+    const userDeleteResult = await User.deleteMany({});
+    console.log(`  - Deleted ${userDeleteResult.deletedCount} users`);
+    
+    const employeeDeleteResult = await Employee.deleteMany({});
+    console.log(`  - Deleted ${employeeDeleteResult.deletedCount} employees`);
+    
+    const resourceDeleteResult = await Resource.deleteMany({});
+    console.log(`  - Deleted ${resourceDeleteResult.deletedCount} resources`);
+    
+    const settingsDeleteResult = await Settings.deleteMany({});
+    console.log(`  - Deleted ${settingsDeleteResult.deletedCount} settings`);
+
+    // Create admin user with explicit error handling
+    let adminUser;
     try {
-      // Delete all documents
-      await User.deleteMany({});
-      await Employee.deleteMany({});
-      await Resource.deleteMany({});
-      await Settings.deleteMany({});
-      
-      // Drop all indexes (except _id) to reset unique constraints
-      try {
-        await User.collection.dropIndexes();
-        await Employee.collection.dropIndexes();
-        await Resource.collection.dropIndexes();
-        await Settings.collection.dropIndexes();
-      } catch (indexError) {
-        console.log('ℹ️ Index drop note:', (indexError as Error).message);
-      }
-      
-      // Recreate default indexes
-      await User.syncIndexes();
-      await Employee.syncIndexes();
-      await Resource.syncIndexes();
-      await Settings.syncIndexes();
-      
-      console.log('✅ Collections cleared and indexes reset');
-    } catch (clearError) {
-      console.log('⚠️ Error clearing collections (continuing):', clearError);
+      adminUser = await User.create({
+        walletAddress: '0x1234567890123456789012345678901234567890',
+        email: 'admin@erp.com',
+        name: 'Admin User',
+        role: 'admin',
+        status: 'active',
+        department: 'Administration',
+        joinDate: new Date('2024-01-01'),
+      });
+      console.log('✅ Created admin user');
+    } catch (err) {
+      console.error('Error creating admin user:', err);
+      throw err;
     }
 
-    // Create admin user
-    const adminUser = await User.create({
-      walletAddress: '0x1234567890123456789012345678901234567890',
-      email: 'admin@erp.com',
-      name: 'Admin User',
-      role: 'admin',
-      status: 'active',
-      department: 'Administration',
-      joinDate: new Date('2024-01-01'),
-    });
-    console.log('✅ Created admin user');
-
-    // Create employee users
+    // Create employee users with explicit error handling
     const employeeUsersData = [
       {
         walletAddress: '0x2932b7A2355D6fecc4b5c0B6BD44cC31df247a2e',
@@ -105,8 +95,14 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
     ];
 
-    const employeeUsers = await User.insertMany(employeeUsersData);
-    console.log('✅ Created 3 employee users');
+    let employeeUsers;
+    try {
+      employeeUsers = await User.insertMany(employeeUsersData, { ordered: false });
+      console.log(`✅ Created ${employeeUsers.length} employee users`);
+    } catch (err) {
+      console.error('Error creating employee users:', err);
+      throw err;
+    }
 
     // Create employees
     const employeesData = [
@@ -188,8 +184,14 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
     ];
 
-    await Employee.insertMany(employeesData);
-    console.log('✅ Created 4 employee records');
+    let createdEmployees;
+    try {
+      createdEmployees = await Employee.insertMany(employeesData, { ordered: false });
+      console.log(`✅ Created ${createdEmployees.length} employee records`);
+    } catch (err) {
+      console.error('Error creating employees:', err);
+      throw err;
+    }
 
     // Create resources
     const resourcesData = [
@@ -245,21 +247,33 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
     ];
 
-    await Resource.insertMany(resourcesData);
-    console.log('✅ Created 5 resources');
+    let createdResources;
+    try {
+      createdResources = await Resource.insertMany(resourcesData, { ordered: false });
+      console.log(`✅ Created ${createdResources.length} resources`);
+    } catch (err) {
+      console.error('Error creating resources:', err);
+      throw err;
+    }
 
     // Create settings
-    await Settings.create({
-      companyName: 'TechForge Inc',
-      companyEmail: 'info@techforge.com',
-      companyPhone: '+1-555-0100',
-      payrollCycle: 'monthly',
-      yieldDistributionPercent: 30,
-      notificationEmail: true,
-      notificationPayroll: true,
-      notificationYield: true,
-    });
-    console.log('✅ Created settings');
+    let settingsCreated;
+    try {
+      settingsCreated = await Settings.create({
+        companyName: 'TechForge Inc',
+        companyEmail: 'info@techforge.com',
+        companyPhone: '+1-555-0100',
+        payrollCycle: 'monthly',
+        yieldDistributionPercent: 30,
+        notificationEmail: true,
+        notificationPayroll: true,
+        notificationYield: true,
+      });
+      console.log('✅ Created settings');
+    } catch (err) {
+      console.error('Error creating settings:', err);
+      throw err;
+    }
 
     console.log('\n✅ ✅ ✅ Database seeded successfully! ✅ ✅ ✅\n');
 
@@ -268,8 +282,8 @@ router.post('/seed', async (req: Request, res: Response) => {
       message: 'Database seeded successfully',
       data: {
         admins: 1,
-        employees: 4,
-        resources: 5,
+        employees: createdEmployees?.length || 4,
+        resources: createdResources?.length || 5,
         settings: 1,
         timestamp: new Date().toISOString(),
       },
