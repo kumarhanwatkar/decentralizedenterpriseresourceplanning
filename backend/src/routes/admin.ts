@@ -197,6 +197,7 @@ router.post('/seed', async (req: Request, res: Response) => {
     const resourcesData = [
       {
         resourceId: 'RES001',
+        serialNumber: 'SN001287-2024',
         name: 'Server Node 1',
         type: 'server',
         department: 'Infrastructure',
@@ -208,6 +209,7 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
       {
         resourceId: 'RES002',
+        serialNumber: 'SN002813-2024',
         name: 'GPU Cluster',
         type: 'machine',
         department: 'Engineering',
@@ -219,6 +221,7 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
       {
         resourceId: 'RES003',
+        serialNumber: 'SN003462-2024',
         name: 'Load Balancer',
         type: 'equipment',
         department: 'Infrastructure',
@@ -230,6 +233,7 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
       {
         resourceId: 'RES004',
+        serialNumber: 'SN004751-2024',
         name: 'Database Server',
         type: 'server',
         department: 'Infrastructure',
@@ -241,6 +245,7 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
       {
         resourceId: 'RES005',
+        serialNumber: 'SN005639-2024',
         name: 'Development Workstation',
         type: 'machine',
         department: 'Engineering',
