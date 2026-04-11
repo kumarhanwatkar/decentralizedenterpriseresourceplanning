@@ -27,7 +27,7 @@ export const authenticateToken = (
       throw new AuthenticationError('No token provided');
     }
 
-    jwt.verify(token, config.jwt.secret, (err, user: any) => {
+    jwt.verify(token, config.jwt.secret, (err: any, user: any) => {
       if (err) {
         throw new AuthenticationError('Invalid token');
       }

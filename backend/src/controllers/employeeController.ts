@@ -4,7 +4,7 @@
  * Uses employeeService for business logic
  */
 
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import employeeService from '../services/employeeService';
 import { NotFoundError, ValidationError } from '../utils/errors';
 import { logger } from '../utils/logger';
@@ -19,7 +19,7 @@ import { PaginatedResponse } from '../types';
  * @query status - Filter by status (active, on_leave, paused, terminated)
  */
 export const employeeController = {
-  getAll: async (req: Request, res: Response): Promise<void> => {
+  getAll: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const pageSize = Math.min(
@@ -28,6 +28,9 @@ export const employeeController = {
       );
       const department = req.query.department as string | undefined;
       const status = req.query.status as any;
+
+      // Example of correct req.body typing
+      const data = req.body as any;
 
       const result = await employeeService.getAllEmployees(page, pageSize, {
         department,

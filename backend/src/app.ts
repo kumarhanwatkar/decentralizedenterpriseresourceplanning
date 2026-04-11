@@ -1,4 +1,4 @@
-import express, { Express, Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { config } from './config/environment';
@@ -16,7 +16,7 @@ import aiConfigRoutes from './routes/aiConfig';
 import settingsRoutes from './routes/settings';
 
 // Initialize express app
-const app: Express = express();
+const app = express();
 
 // Trust proxy
 app.set('trust proxy', 1);
