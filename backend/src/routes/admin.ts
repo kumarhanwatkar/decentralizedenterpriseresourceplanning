@@ -265,14 +265,20 @@ router.post('/seed', async (req: Request, res: Response) => {
     let settingsCreated;
     try {
       settingsCreated = await Settings.create({
+        organizationId: 'ORG001',
         companyName: 'TechForge Inc',
         companyEmail: 'info@techforge.com',
         companyPhone: '+1-555-0100',
         payrollCycle: 'monthly',
         yieldDistributionPercent: 30,
-        notificationEmail: true,
-        notificationPayroll: true,
-        notificationYield: true,
+        liquidPercentage: 70,
+        blockchainNetwork: 'bsc_testnet',
+        notificationSettings: {
+          emailPayroll: true,
+          emailYield: true,
+          emailSystem: true,
+          smsPayroll: false,
+        },
       });
       console.log('✅ Created settings');
     } catch (err) {
