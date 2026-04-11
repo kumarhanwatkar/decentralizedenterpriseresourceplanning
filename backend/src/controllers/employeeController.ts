@@ -1,23 +1,9 @@
-/**
- * Employee Controller
- * Handles HTTP requests for employee operations
- * Uses employeeService for business logic
- */
-
 import { Request, Response, NextFunction } from 'express';
 import employeeService from '../services/employeeService';
 import { NotFoundError, ValidationError } from '../utils/errors';
 import { logger } from '../utils/logger';
 import { PaginatedResponse } from '../types';
 
-/**
- * Get all employees with pagination and optional filters
- * @route GET /api/employees
- * @query page - Page number (default: 1)
- * @query pageSize - Items per page (default: 20, max: 100)
- * @query department - Filter by department
- * @query status - Filter by status (active, on_leave, paused, terminated)
- */
 export const employeeController = {
   getAll: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
@@ -29,7 +15,6 @@ export const employeeController = {
       const department = req.query.department as string | undefined;
       const status = req.query.status as any;
 
-      // Example of correct req.body typing
       const data = req.body as any;
 
       const result = await employeeService.getAllEmployees(page, pageSize, {
@@ -59,15 +44,9 @@ export const employeeController = {
     }
   },
 
-  /**
-   * Get single employee by MongoDB ID
-   * @route GET /api/employees/:id
-   * @param id - MongoDB employee ID
-   */
-  getById: async (req: Request, res: Response): Promise<void> => {
+  getById: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { id } = req.params;
-
       const employee = await employeeService.getEmployeeById(id);
 
       res.status(200).json({
@@ -78,6 +57,21 @@ export const employeeController = {
     } catch (error) {
       logger.error('Get employee error:', error);
       if (error instanceof NotFoundError) {
+        res.status(404).json({
+          success: false,
+          message: 'Employee not found',
+          statusCode: 404,
+        });
+      } else {
+        res.status(500).json({
+          success: false,
+          message: 'Failed to fetch employee',
+          statusCode: 500,
+        });
+      }
+    }
+  },
+};
         res.status(404).json({
           success: false,
           message: error.message,

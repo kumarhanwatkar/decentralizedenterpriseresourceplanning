@@ -32,7 +32,7 @@ app.set('trust proxy', 1);
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-
+const app = express();
 // CORS configuration
 app.use(
   cors({
@@ -56,7 +56,7 @@ app.get('/health', (_req: Request, res: Response) => {
     environment: config.nodeEnv,
   });
 });
-
+// Health check
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
