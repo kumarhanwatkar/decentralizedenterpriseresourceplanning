@@ -13,6 +13,7 @@ import transactionRoutes from './routes/transactions';
 import resourceRoutes from './routes/resources';
 import aiConfigRoutes from './routes/aiConfig';
 import settingsRoutes from './routes/settings';
+import adminRoutes from './routes/admin';
 
 // Initialize express app
 const app: Express = express();
@@ -56,6 +57,7 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/ai-config', aiConfigRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handling
 app.use(notFoundHandler);
