@@ -1,31 +1,53 @@
 import { Router, Request, Response } from 'express';
-import { Employee, User, Resource, Settings } from '../models/index';
 
 const router = Router();
 
 /**
+ * ADMIN ONLY: Health check
+ */
+router.get('/health', (_req: Request, res: Response) => {
+  res.json({
+    status: 'Admin API OK',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+/**
  * ADMIN ONLY: Seed database with example data
- * Requires SEED_KEY environment variable
+ * Requires X-SEED-KEY header
  */
 router.post('/seed', async (req: Request, res: Response) => {
   try {
     const seedKey = req.headers['x-seed-key'];
     const expectedKey = process.env.SEED_KEY || 'seed_secret_key_12345';
     
+    // Verify seed key
     if (seedKey !== expectedKey) {
-      return res.status(401).json({ error: 'Unauthorized' });
+      console.warn('⚠️ Unauthorized seed attempt with key:', seedKey);
+      return res.status(401).json({ error: 'Unauthorized - Invalid seed key' });
     }
 
+    console.log('🌱 Starting database seed...');
+
+    // Dynamic imports to avoid circular dependencies
+    const { default: User } = await import('../models/User');
+    const { default: Employee } = await import('../models/Employee');
+    const { default: Resource } = await import('../models/Resource');
+    const { default: Settings } = await import('../models/Settings');
+
     // Clear collections
-    await Promise.all([
-      User.deleteMany({}),
-      Employee.deleteMany({}),
-      Resource.deleteMany({}),
-      Settings.deleteMany({}),
-    ]);
+    console.log('🧹 Clearing existing data...');
+    try {
+      await User.deleteMany({}).exec();
+      await Employee.deleteMany({}).exec();
+      await Resource.deleteMany({}).exec();
+      await Settings.deleteMany({}).exec();
+    } catch (clearError) {
+      console.log('⚠️ Error clearing collections (continuing):', clearError);
+    }
 
     // Create admin user
-    const adminUser = new User({
+    const adminUser = await User.create({
       walletAddress: '0x1234567890123456789012345678901234567890',
       email: 'admin@erp.com',
       name: 'Admin User',
@@ -34,7 +56,7 @@ router.post('/seed', async (req: Request, res: Response) => {
       department: 'Administration',
       joinDate: new Date('2024-01-01'),
     });
-    await adminUser.save();
+    console.log('✅ Created admin user');
 
     // Create employee users
     const employeeUsersData = [
@@ -64,12 +86,8 @@ router.post('/seed', async (req: Request, res: Response) => {
       },
     ];
 
-    const employeeUsers: any[] = [];
-    for (const userData of employeeUsersData) {
-      const user = new User(userData);
-      await user.save();
-      employeeUsers.push(user);
-    }
+    const employeeUsers = await User.insertMany(employeeUsersData);
+    console.log('✅ Created 3 employee users');
 
     // Create employees
     const employeesData = [
@@ -152,6 +170,7 @@ router.post('/seed', async (req: Request, res: Response) => {
     ];
 
     await Employee.insertMany(employeesData);
+    console.log('✅ Created 4 employee records');
 
     // Create resources
     const resourcesData = [
@@ -208,9 +227,10 @@ router.post('/seed', async (req: Request, res: Response) => {
     ];
 
     await Resource.insertMany(resourcesData);
+    console.log('✅ Created 5 resources');
 
     // Create settings
-    const settingsData = {
+    await Settings.create({
       companyName: 'TechForge Inc',
       companyEmail: 'info@techforge.com',
       companyPhone: '+1-555-0100',
@@ -219,23 +239,29 @@ router.post('/seed', async (req: Request, res: Response) => {
       notificationEmail: true,
       notificationPayroll: true,
       notificationYield: true,
-    };
+    });
+    console.log('✅ Created settings');
 
-    await Settings.create(settingsData);
+    console.log('\n✅ ✅ ✅ Database seeded successfully! ✅ ✅ ✅\n');
 
     res.json({
       success: true,
       message: 'Database seeded successfully',
       data: {
-        users: 4,
+        admins: 1,
         employees: 4,
         resources: 5,
         settings: 1,
+        timestamp: new Date().toISOString(),
       },
     });
   } catch (error) {
-    console.error('Seed error:', error);
-    res.status(500).json({ error: 'Seeding failed', details: (error as Error).message });
+    console.error('❌ Seed error:', error);
+    res.status(500).json({
+      error: 'Seeding failed',
+      message: (error as Error).message,
+      stack: process.env.NODE_ENV === 'development' ? (error as Error).stack : undefined,
+    });
   }
 });
 
