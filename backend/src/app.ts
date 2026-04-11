@@ -1,16 +1,7 @@
-// Health check route at /api/health
-app.get('/api/health', (_req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'Server is running',
-    timestamp: new Date().toISOString(),
-    environment: config.nodeEnv,
-  });
-});
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { config } from './config/environment';
-
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/logging';
 
@@ -24,7 +15,7 @@ import aiConfigRoutes from './routes/aiConfig';
 import settingsRoutes from './routes/settings';
 
 // Initialize express app
-const app = express();
+const app: Express = express();
 
 // Trust proxy
 app.set('trust proxy', 1);
@@ -32,7 +23,7 @@ app.set('trust proxy', 1);
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
-const app = express();
+
 // CORS configuration
 app.use(
   cors({
@@ -56,7 +47,7 @@ app.get('/health', (_req: Request, res: Response) => {
     environment: config.nodeEnv,
   });
 });
-// Health check
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);

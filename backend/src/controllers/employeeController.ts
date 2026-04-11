@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import employeeService from '../services/employeeService';
 import { NotFoundError, ValidationError } from '../utils/errors';
 import { logger } from '../utils/logger';
 import { PaginatedResponse } from '../types';
 
 export const employeeController = {
-  getAll: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getAll: async (req: Request, res: Response): Promise<void> => {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const pageSize = Math.min(
@@ -14,8 +14,6 @@ export const employeeController = {
       );
       const department = req.query.department as string | undefined;
       const status = req.query.status as any;
-
-      const data = req.body as any;
 
       const result = await employeeService.getAllEmployees(page, pageSize, {
         department,
@@ -44,7 +42,7 @@ export const employeeController = {
     }
   },
 
-  getById: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  getById: async (req: Request, res: Response): Promise<void> => {
     try {
       const { id } = req.params;
       const employee = await employeeService.getEmployeeById(id);
@@ -57,21 +55,6 @@ export const employeeController = {
     } catch (error) {
       logger.error('Get employee error:', error);
       if (error instanceof NotFoundError) {
-        res.status(404).json({
-          success: false,
-          message: 'Employee not found',
-          statusCode: 404,
-        });
-      } else {
-        res.status(500).json({
-          success: false,
-          message: 'Failed to fetch employee',
-          statusCode: 500,
-        });
-      }
-    }
-  },
-};
         res.status(404).json({
           success: false,
           message: error.message,
