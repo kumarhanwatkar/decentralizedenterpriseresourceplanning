@@ -1,3 +1,11 @@
+// Health check route at /api/health
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'Server is running',
+    timestamp: new Date().toISOString(),
+    environment: config.nodeEnv,
+  });
+});
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
