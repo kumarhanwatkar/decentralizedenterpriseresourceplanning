@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { AuthenticationError } from '../utils/errors';
 import { logger } from '../utils/logger';
-import { LoginRequest, LoginResponse, ApiResponse } from '../types';
+import { LoginRequest } from '../types';
 import { authService } from '../services/authService';
 
 export const authController = {
@@ -50,6 +50,7 @@ export const authController = {
   walletLogin: async (req: Request, res: Response): Promise<void> => {
     try {
       const { walletAddress, signature, message, timestamp } = req.body as LoginRequest & {
+        signature?: string;
         message: string;
         timestamp: number;
       };

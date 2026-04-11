@@ -1,4 +1,4 @@
-import { Settings } from '../models/Settings';
+import Settings from '../models/Settings';
 import { ISettings } from '../types';
 import { AppError } from '../utils/errors';
 

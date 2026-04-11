@@ -1,9 +1,7 @@
-import { Schema, model, Document } from 'mongoose';
-import { IUser, UserRole, UserStatus } from '../types';
+import { Schema, model } from 'mongoose';
+import { IUser } from '../types';
 
-export interface IUserDocument extends IUser, Document {}
-
-const userSchema = new Schema<IUserDocument>(
+const userSchema = new Schema<IUser>(
   {
     walletAddress: {
       type: String,
@@ -67,4 +65,4 @@ userSchema.index({ walletAddress: 1, isDeleted: 1 });
 userSchema.index({ role: 1, status: 1 });
 userSchema.index({ createdAt: -1 });
 
-export const User = model<IUserDocument>('User', userSchema);
+export default model<IUser>('User', userSchema);

@@ -1,9 +1,7 @@
-import { Schema, model, Document } from 'mongoose';
-import { ITransaction, TransactionType, TransactionStatus } from '../types';
+import { Schema, model } from 'mongoose';
+import { ITransaction, TransactionStatus } from '../types';
 
-interface ITransactionDocument extends ITransaction, Document {}
-
-const transactionSchema = new Schema<ITransactionDocument>(
+const transactionSchema = new Schema<ITransaction>(
   {
     txHash: {
       type: String,
@@ -124,4 +122,4 @@ transactionSchema.virtual('statusLabel').get(function () {
   return labels[this.status];
 });
 
-export const Transaction = model<ITransactionDocument>('Transaction', transactionSchema);
+export default model<ITransaction>('Transaction', transactionSchema);

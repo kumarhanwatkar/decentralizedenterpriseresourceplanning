@@ -1,7 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
-import { IAIConfig, IWidget, WidgetType, WidgetSize } from '../types';
-
-interface IAIConfigDocument extends IAIConfig, Document {}
+import { Schema, model } from 'mongoose';
+import { IAIConfig, IWidget } from '../types';
 
 // Widget Schema (nested)
 const widgetSchema = new Schema<IWidget>(
@@ -44,7 +42,7 @@ const widgetSchema = new Schema<IWidget>(
 );
 
 // Main AI Config Schema
-const aiConfigSchema = new Schema<IAIConfigDocument>(
+const aiConfigSchema = new Schema<IAIConfig>(
   {
     organizationId: {
       type: String,
@@ -52,7 +50,7 @@ const aiConfigSchema = new Schema<IAIConfigDocument>(
       index: true,
     },
     adminId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId as any,
       ref: 'User',
       required: true,
       index: true,
@@ -117,4 +115,4 @@ aiConfigSchema.index({ updatedAt: -1 });
 // Compound index for efficient admin queries
 aiConfigSchema.index({ organizationId: 1, adminId: 1, isActive: 1 });
 
-export const AIConfig = model<IAIConfigDocument>('AIConfig', aiConfigSchema);
+export default model<IAIConfig>('AIConfig', aiConfigSchema);

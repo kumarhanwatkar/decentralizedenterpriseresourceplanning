@@ -1,4 +1,4 @@
-import { Resource } from '../models/Resource';
+import Resource from '../models/Resource';
 import { IResource, ResourceType, ResourceStatus } from '../types';
 import { AppError } from '../utils/errors';
 
@@ -157,7 +157,7 @@ export class ResourceService {
   async updateResourceStatus(
     resourceId: string,
     status: ResourceStatus,
-    description?: string
+    // description?: string // Removed unused variable
   ): Promise<IResource> {
     try {
       const validStatuses: ResourceStatus[] = ['operational', 'maintenance', 'offline'];
@@ -408,7 +408,7 @@ export class ResourceService {
       ]);
 
       const byStatusObj = byStatus.reduce(
-        (acc, item) => {
+        (acc: any, item: any) => {
           acc[item._id] = item.count;
           return acc;
         },
@@ -416,7 +416,7 @@ export class ResourceService {
       );
 
       const byTypeObj = byType.reduce(
-        (acc, item) => {
+        (acc: any, item: any) => {
           acc[item._id] = item.count;
           return acc;
         },

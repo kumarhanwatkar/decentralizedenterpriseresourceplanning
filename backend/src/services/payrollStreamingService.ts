@@ -4,8 +4,8 @@
  * Runs background jobs to update employee earnings every second
  */
 
-import { Employee } from '../models/Employee';
-import logger from '../utils/logger';
+import Employee from '../models/Employee';
+import { logger } from '../utils/logger';
 
 /**
  * Payroll streaming configuration

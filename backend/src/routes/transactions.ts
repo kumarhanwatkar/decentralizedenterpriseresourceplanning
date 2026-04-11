@@ -65,7 +65,7 @@ router.get('/hash/:txHash', (req: Request, res: Response, next: NextFunction) =>
  * @access  Private/Admin
  * @body    txHash, blockNumber, type, fromAddress, toAddress, amount, token, [fromEmployeeId, toEmployeeId, yieldGenerated, yieldPercentage, lockPeriod, status, confirmations, gasUsed, description, metadata]
  */
-router.post('/', authorize(['admin']), TransactionController.createTransaction);
+router.post('/', authorize('admin'), TransactionController.createTransaction);
 
 /**
  * @route   PATCH /api/transactions/:id/status
@@ -74,7 +74,7 @@ router.post('/', authorize(['admin']), TransactionController.createTransaction);
  * @params  id
  * @body    status, [confirmations, gasUsed]
  */
-router.patch('/:id/status', authorize(['admin']), TransactionController.updateTransactionStatus);
+router.patch('/:id/status', authorize('admin'), TransactionController.updateTransactionStatus);
 
 /**
  * @route   GET /api/transactions/:id

@@ -134,7 +134,7 @@ export class ResourceController {
   static async updateResourceStatus(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const { status, description } = req.body;
+      const { status } = req.body;
 
       if (!status) {
         throw new AppError('Status is required', 400);
@@ -145,7 +145,7 @@ export class ResourceController {
         throw new AppError(`Invalid status. Must be one of: ${validStatuses.join(', ')}`, 400);
       }
 
-      const resource = await resourceService.updateResourceStatus(id, status, description);
+      const resource = await resourceService.updateResourceStatus(id, status);
 
       res.status(200).json({
         success: true,
@@ -331,7 +331,7 @@ export class ResourceController {
   /**
    * GET /api/resources/stats - Get resource statistics
    */
-  static async getResourceStats(req: Request, res: Response, next: NextFunction): Promise<void> {
+  static async getResourceStats(_req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const stats = await resourceService.getResourceStats();
 

@@ -2,7 +2,7 @@ import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { config } from './config/environment';
-import { logger } from './utils/logger';
+
 import { errorHandler, notFoundHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/logging';
 
@@ -41,7 +41,7 @@ if (config.nodeEnv !== 'test') {
 }
 
 // Health check
-app.get('/health', (req: Request, res: Response) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({
     status: 'Server is running',
     timestamp: new Date().toISOString(),

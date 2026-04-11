@@ -7,7 +7,7 @@ export const errorHandler = (
   err: Error | CustomError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   logger.error('Error occurred', {
     message: err.message,
@@ -37,7 +37,7 @@ export const errorHandler = (
 export const notFoundHandler = (
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ): void => {
   res.status(404).json({
     success: false,

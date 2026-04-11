@@ -1,4 +1,4 @@
-import { Router, Request, Response, NextFunction } from 'express';
+import { Router } from 'express';
 import ResourceController from '../controllers/resourceController';
 import { authenticateToken, authorize } from '../middleware/authentication';
 
@@ -61,7 +61,7 @@ router.get('/department/:department', ResourceController.getResourcesByDepartmen
  * @access  Private/Admin
  * @body    resourceId, name, type, department, location, [serialNumber, purchasePrice, warrantyExpiry]
  */
-router.post('/', authorize(['admin']), ResourceController.createResource);
+router.post('/', authorize('admin'), ResourceController.createResource);
 
 /**
  * @route   GET /api/resources/:id
@@ -78,7 +78,7 @@ router.get('/:id', ResourceController.getResourceById);
  * @params  id
  * @body    status, [description]
  */
-router.patch('/:id/status', authorize(['admin']), ResourceController.updateResourceStatus);
+router.patch('/:id/status', authorize('admin'), ResourceController.updateResourceStatus);
 
 /**
  * @route   PATCH /api/resources/:id/utilization
@@ -87,7 +87,7 @@ router.patch('/:id/status', authorize(['admin']), ResourceController.updateResou
  * @params  id
  * @body    utilization
  */
-router.patch('/:id/utilization', authorize(['admin']), ResourceController.updateResourceUtilization);
+router.patch('/:id/utilization', authorize('admin'), ResourceController.updateResourceUtilization);
 
 /**
  * @route   PATCH /api/resources/:id/efficiency
@@ -96,7 +96,7 @@ router.patch('/:id/utilization', authorize(['admin']), ResourceController.update
  * @params  id
  * @body    efficiency
  */
-router.patch('/:id/efficiency', authorize(['admin']), ResourceController.updateResourceEfficiency);
+router.patch('/:id/efficiency', authorize('admin'), ResourceController.updateResourceEfficiency);
 
 /**
  * @route   PATCH /api/resources/:id
@@ -105,7 +105,7 @@ router.patch('/:id/efficiency', authorize(['admin']), ResourceController.updateR
  * @params  id
  * @body    name, department, location, utilization, efficiency, lastMaintenance, nextMaintenanceScheduled, maintenanceCost
  */
-router.patch('/:id', authorize(['admin']), ResourceController.updateResource);
+router.patch('/:id', authorize('admin'), ResourceController.updateResource);
 
 /**
  * @route   DELETE /api/resources/:id
@@ -113,6 +113,6 @@ router.patch('/:id', authorize(['admin']), ResourceController.updateResource);
  * @access  Private/Admin
  * @params  id
  */
-router.delete('/:id', authorize(['admin']), ResourceController.deleteResource);
+router.delete('/:id', authorize('admin'), ResourceController.deleteResource);
 
 export default router;

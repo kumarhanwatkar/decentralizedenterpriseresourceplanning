@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User';
+import { createSecretKey } from 'crypto';
+import User from '../models/User';
 import { config } from '../config/environment';
 import { AuthenticationError, NotFoundError } from '../utils/errors';
 import { walletUtils, generateNonce, isTimestampValid } from '../utils/wallet';
@@ -146,9 +147,9 @@ This request will expire in 5 minutes.
       ...(organizationId && { organizationId }),
     };
 
-    return jwt.sign(payload, config.jwt.secret, {
-      expiresIn: config.jwt.expire,
-      algorithm: 'HS256',
+    const secret = createSecretKey(Buffer.from(config.jwt.secret as string));
+    return jwt.sign(payload, secret, {
+      expiresIn: config.jwt.expire as any
     });
   },
 
@@ -158,9 +159,9 @@ This request will expire in 5 minutes.
    * @returns Refresh token
    */
   generateRefreshToken: (userId: string): string => {
-    return jwt.sign({ id: userId }, config.jwt.refreshSecret, {
-      expiresIn: config.jwt.refreshExpire,
-      algorithm: 'HS256',
+    const refreshSecret = createSecretKey(Buffer.from(config.jwt.refreshSecret as string));
+    return jwt.sign({ id: userId }, refreshSecret, {
+      expiresIn: config.jwt.refreshExpire as any
     });
   },
 

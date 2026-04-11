@@ -3,10 +3,10 @@
  * This allows for easy importing: import { User, Employee, ... } from '@models'
  */
 
-export { User } from './User';
-export { Employee } from './Employee';
-export { Payroll } from './Payroll';
-export { Transaction } from './Transaction';
-export { Resource } from './Resource';
-export { Settings } from './Settings';
-export { AIConfig } from './AIConfig';
+export { default as User } from './User';
+export { default as Employee } from './Employee';
+export { default as Payroll } from './Payroll';
+export { default as Transaction } from './Transaction';
+export { default as Resource } from './Resource';
+export { default as Settings } from './Settings';
+export { default as AIConfig } from './AIConfig';

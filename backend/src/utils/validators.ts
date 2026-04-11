@@ -1,6 +1,6 @@
-import { body, validationResult, ValidationChain } from 'express-validator';
 import { Request, Response, NextFunction } from 'express';
 import { ValidationError } from './errors';
+const { body, validationResult } = require('express-validator');
 
 // Custom validators
 export const validators = {
@@ -27,37 +27,39 @@ export const validators = {
     .withMessage('Amount must be greater than 0'),
 
   // Required string
-  requiredString: (field: string) =>
+  requiredString: (field: string) => (
     body(field)
       .isString()
       .trim()
       .notEmpty()
-      .withMessage(`${field} is required`),
+      .withMessage(`${field} is required`)
+  ),
 
   // Optional string
-  optionalString: (field: string) =>
+  optionalString: (field: string) => (
     body(field)
       .optional()
       .isString()
-      .trim(),
+      .trim()
+  ),
 };
 
 // Middleware to handle validation errors
 export const handleValidationErrors = (
   req: Request,
-  res: Response,
+  // res: Response, // Removed unused parameter
   next: NextFunction
 ): void => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    const errorMessages = errors.array().map((err) => ({
+    const errorMessages = errors.array().map((err: any) => ({
       field: err.param,
       message: err.msg,
     }));
 
     throw new ValidationError(
-      `Validation failed: ${errorMessages.map((e) => `${e.field}: ${e.message}`).join(', ')}`
+      `Validation failed: ${errorMessages.map((e: any) => `${e.field}: ${e.message}`).join(', ')}`
     );
   }
 
@@ -65,9 +67,9 @@ export const handleValidationErrors = (
 };
 
 // Chain validators
-export const validateRequest = (...validations: ValidationChain[]) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+export const validateRequest = (...validations: any[]) => {
+  return async (req: Request, _res: Response, next: NextFunction) => {
     await Promise.all(validations.map((validation) => validation.run(req)));
-    handleValidationErrors(req, res, next);
+    handleValidationErrors(req, next);
   };
 };

@@ -4,7 +4,7 @@
  * Runs earnings updates at specified intervals
  */
 
-import logger from '../utils/logger';
+import { logger } from '../utils/logger';
 import payrollStreamingService, { PAYROLL_CONFIG } from './payrollStreamingService';
 
 interface SchedulerConfig {

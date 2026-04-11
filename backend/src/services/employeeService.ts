@@ -7,10 +7,10 @@
  * - Employee search and filtering
  */
 
-import { Employee } from '../models/Employee';
+import Employee from '../models/Employee';
 import { IEmployee, EmployeeStatus } from '../types';
 import { NotFoundError, ValidationError } from '../utils/errors';
-import logger from '../utils/logger';
+import { logger } from '../utils/logger';
 
 /**
  * Real-time earnings calculation
@@ -153,7 +153,7 @@ const employeeService = {
 
       // Update real-time earnings before returning
       if (employee.status === 'active') {
-        const earnings = await updateRealTimeEarnings(employeeId);
+        const earnings = await updateRealTimeEarnings(employeeId as string);
         employee.totalAccrued = earnings.totalAccrued;
         employee.liquidAmount = earnings.liquidAmount;
       }
@@ -306,7 +306,7 @@ const employeeService = {
 
       if (previousStatus === 'active' && newStatus === 'paused') {
         // Pause payroll - final earnings accrual before pause
-        const earnings = await updateRealTimeEarnings(employeeId);
+        const earnings = await updateRealTimeEarnings(employeeId as string);
         statusChangeNote = `Payroll paused. Final earnings accrued: $${earnings.earningsAccrued.toFixed(2)}`;
         logger.info(`Payroll paused for employee ${employeeId}`);
       } else if (previousStatus === 'paused' && newStatus === 'active') {
@@ -316,7 +316,7 @@ const employeeService = {
         logger.info(`Payroll resumed for employee ${employeeId}`);
       } else if (newStatus === 'on_leave') {
         // On leave - accrue earnings but mark as on leave
-        const earnings = await updateRealTimeEarnings(employeeId);
+        await updateRealTimeEarnings(employeeId);
         statusChangeNote = `Employee on leave. Earnings paused.`;
       } else if (newStatus === 'terminated') {
         // Terminated - final earnings accrual and calculation
@@ -569,7 +569,7 @@ const employeeService = {
         { $sort: { count: -1 } },
       ]);
 
-      return counts.map((item) => ({
+      return counts.map((item: any) => ({
         department: item._id,
         count: item.count,
       }));

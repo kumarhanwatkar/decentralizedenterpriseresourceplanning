@@ -14,7 +14,7 @@ export const payrollStreamingController = {
    * Get streaming status for all active employees
    * @route GET /api/payroll/status
    */
-  getStreamingStatus: async (req: Request, res: Response): Promise<void> => {
+  getStreamingStatus: async (_req: Request, res: Response): Promise<void> => {
     try {
       const stats = await payrollStreamingService.getStreamingStats();
 
@@ -260,7 +260,7 @@ export const payrollStreamingController = {
    * Get scheduler status (admin only)
    * @route GET /api/payroll/admin/scheduler-status
    */
-  getSchedulerStatus: async (req: Request, res: Response): Promise<void> => {
+  getSchedulerStatus: async (_req: Request, res: Response): Promise<void> => {
     try {
       const scheduler = getPayrollScheduler();
       const status = scheduler.getStatus();
@@ -287,7 +287,7 @@ export const payrollStreamingController = {
    * Start scheduler (admin only)
    * @route POST /api/payroll/admin/scheduler-start
    */
-  startScheduler: async (req: Request, res: Response): Promise<void> => {
+  startScheduler: async (_req: Request, res: Response): Promise<void> => {
     try {
       const scheduler = getPayrollScheduler();
 
@@ -321,7 +321,7 @@ export const payrollStreamingController = {
    * Stop scheduler (admin only)
    * @route POST /api/payroll/admin/scheduler-stop
    */
-  stopScheduler: async (req: Request, res: Response): Promise<void> => {
+  stopScheduler: async (_req: Request, res: Response): Promise<void> => {
     try {
       const scheduler = getPayrollScheduler();
 

@@ -1,5 +1,5 @@
-import { Transaction } from '../models/Transaction';
-import { Employee } from '../models/Employee';
+import Transaction from '../models/Transaction';
+// import Employee from '../models/Employee'; // Removed unused import
 import { ITransaction, TransactionType, TransactionStatus } from '../types';
 import { AppError } from '../utils/errors';
 
@@ -346,7 +346,7 @@ export class TransactionService {
       ]);
 
       const byTypeObj = byType.reduce(
-        (acc, item) => {
+        (acc: any, item: any) => {
           acc[item._id] = item.count;
           return acc;
         },
@@ -354,7 +354,7 @@ export class TransactionService {
       );
 
       const byStatusObj = byStatus.reduce(
-        (acc, item) => {
+        (acc: any, item: any) => {
           acc[item._id] = item.count;
           return acc;
         },
@@ -362,7 +362,7 @@ export class TransactionService {
       );
 
       const byTokenObj = byToken.reduce(
-        (acc, item) => {
+        (acc: any, item: any) => {
           acc[item._id] = item.total;
           return acc;
         },

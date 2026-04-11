@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { AIConfigController } from '../controllers/aiConfigController';
 import { authenticateToken, isAdmin } from '../middleware/authentication';
+import authorize from '../middleware/authorization';
 
 const router = Router();
 
@@ -95,7 +96,7 @@ router.get('/admin/all', isAdmin, AIConfigController.getAdminConfigs);
  */
 router.get('/:configId', AIConfigController.getAIConfigById);
 
-export default router;
+
 
 /**
  * @route   GET /api/ai-config
@@ -110,7 +111,7 @@ router.get('/', AIConfigController.getAIConfig);
  * @access  Admin
  * @body    { layout, gridColumns? }
  */
-router.patch('/layout', authorize(['admin']), AIConfigController.updateLayout);
+router.patch('/layout', authorize('admin'), AIConfigController.updateLayout);
 
 /**
  * @route   PUT /api/ai-config/widgets
@@ -118,7 +119,7 @@ router.patch('/layout', authorize(['admin']), AIConfigController.updateLayout);
  * @access  Admin
  * @body    { widgets: IWidget[] }
  */
-router.put('/widgets', authorize(['admin']), AIConfigController.updateWidgets);
+router.put('/widgets', authorize('admin'), AIConfigController.updateWidgets);
 
 /**
  * @route   POST /api/ai-config/widgets
@@ -126,7 +127,7 @@ router.put('/widgets', authorize(['admin']), AIConfigController.updateWidgets);
  * @access  Admin
  * @body    { id, type, title, position, size?, dataSource, configuration? }
  */
-router.post('/widgets', authorize(['admin']), AIConfigController.addWidget);
+router.post('/widgets', authorize('admin'), AIConfigController.addWidget);
 
 /**
  * @route   PATCH /api/ai-config/widgets/:widgetId
@@ -134,28 +135,28 @@ router.post('/widgets', authorize(['admin']), AIConfigController.addWidget);
  * @access  Admin
  * @body    { partial widget fields }
  */
-router.patch('/widgets/:widgetId', authorize(['admin']), AIConfigController.updateWidget);
+router.patch('/widgets/:widgetId', authorize('admin'), AIConfigController.updateWidget);
 
 /**
  * @route   DELETE /api/ai-config/widgets/:widgetId
  * @desc    Remove a widget from dashboard
  * @access  Admin
  */
-router.delete('/widgets/:widgetId', authorize(['admin']), AIConfigController.removeWidget);
+router.delete('/widgets/:widgetId', authorize('admin'), AIConfigController.removeWidget);
 
 /**
  * @route   PATCH /api/ai-config/publish
  * @desc    Publish AI config
  * @access  Admin
  */
-router.patch('/publish', authorize(['admin']), AIConfigController.publishConfig);
+router.patch('/publish', authorize('admin'), AIConfigController.publishConfig);
 
 /**
  * @route   PATCH /api/ai-config/deactivate
  * @desc    Deactivate AI config
  * @access  Admin
  */
-router.patch('/deactivate', authorize(['admin']), AIConfigController.deactivateConfig);
+router.patch('/deactivate', authorize('admin'), AIConfigController.deactivateConfig);
 
 /**
  * @route   GET /api/ai-config/admin/all
@@ -163,7 +164,7 @@ router.patch('/deactivate', authorize(['admin']), AIConfigController.deactivateC
  * @access  Admin
  * @query   { limit?, page? }
  */
-router.get('/admin/all', authorize(['admin']), AIConfigController.getAdminConfigs);
+router.get('/admin/all', authorize('admin'), AIConfigController.getAdminConfigs);
 
 /**
  * @route   GET /api/ai-config/:configId

@@ -1,9 +1,7 @@
-import { Schema, model, Document } from 'mongoose';
-import { ISettings, OrganizationPlan } from '../types';
+import { Schema, model } from 'mongoose';
+import { ISettings } from '../types';
 
-interface ISettingsDocument extends ISettings, Document {}
-
-const settingsSchema = new Schema<ISettingsDocument>(
+const settingsSchema = new Schema<ISettings>(
   {
     organizationId: {
       type: String,
@@ -91,4 +89,4 @@ const settingsSchema = new Schema<ISettingsDocument>(
   }
 );
 
-export const Settings = model<ISettingsDocument>('Settings', settingsSchema);
+export default model<ISettings>('Settings', settingsSchema);

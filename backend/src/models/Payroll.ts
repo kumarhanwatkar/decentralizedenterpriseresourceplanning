@@ -1,12 +1,10 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { IPayroll } from '../types';
 
-interface IPayrollDocument extends IPayroll, Document {}
-
-const payrollSchema = new Schema<IPayrollDocument>(
+const payrollSchema = new Schema<IPayroll>(
   {
     employeeId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId as any,
       ref: 'Employee',
       required: true,
       index: true,
@@ -76,8 +74,8 @@ payrollSchema.index({ employeeId: 1, cycleStartDate: 1 });
 payrollSchema.index({ isStreaming: 1, isPaused: 1 });
 
 // Virtual for calculate accrued amount per second
-payrollSchema.virtual('accrualPerSecond').get(function () {
+payrollSchema.virtual('accrualPerSecond').get(function (this: any) {
   return this.hourlyRate / 3600;
 });
 
-export const Payroll = model<IPayrollDocument>('Payroll', payrollSchema);
+export default model<IPayroll>('Payroll', payrollSchema);

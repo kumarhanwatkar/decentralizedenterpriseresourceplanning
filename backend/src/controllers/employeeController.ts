@@ -435,7 +435,7 @@ export const employeeController = {
    * Get organization-wide payroll statistics
    * @route GET /api/employees/stats/payroll-total
    */
-  getPayrollStats: async (req: Request, res: Response): Promise<void> => {
+  getPayrollStats: async (_req: Request, res: Response): Promise<void> => {
     try {
       const stats = await employeeService.getActivePayrollTotal();
 
@@ -458,7 +458,7 @@ export const employeeController = {
    * Get employee statistics by department
    * @route GET /api/employees/stats/by-department
    */
-  getEmployeeStats: async (req: Request, res: Response): Promise<void> => {
+  getEmployeeStats: async (_req: Request, res: Response): Promise<void> => {
     try {
       const stats = await employeeService.getEmployeeCountByDepartment();
 

@@ -1,4 +1,4 @@
-import { AIConfig } from '../models/AIConfig';
+import AIConfig from '../models/AIConfig';
 import { IAIConfig, IWidget } from '../types';
 import { AppError } from '../utils/errors';
 
@@ -184,7 +184,7 @@ class AIConfigService {
       }
 
       // Check if widget with same ID already exists
-      const existingIndex = config.widgets.findIndex((w) => w.id === widget.id);
+      const existingIndex = config.widgets.findIndex((w: IWidget) => w.id === widget.id);
       if (existingIndex >= 0) {
         throw new AppError('Widget with this ID already exists', 409);
       }
@@ -211,7 +211,7 @@ class AIConfigService {
       }
 
       const initialLength = config.widgets.length;
-      config.widgets = config.widgets.filter((w) => w.id !== widgetId);
+      config.widgets = config.widgets.filter((w: IWidget) => w.id !== widgetId);
 
       if (config.widgets.length === initialLength) {
         throw new AppError('Widget not found', 404);

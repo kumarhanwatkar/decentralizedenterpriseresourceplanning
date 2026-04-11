@@ -1,12 +1,10 @@
-import { Schema, model, Document } from 'mongoose';
-import { IEmployee, EmployeeStatus } from '../types';
+import { Schema, model } from 'mongoose';
+import { IEmployee } from '../types';
 
-interface IEmployeeDocument extends IEmployee, Document {}
-
-const employeeSchema = new Schema<IEmployeeDocument>(
+const employeeSchema = new Schema<IEmployee>(
   {
     userId: {
-      type: Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId as any,
       ref: 'User',
       required: true,
     },
@@ -146,4 +144,4 @@ employeeSchema.index({ userId: 1 });
 employeeSchema.index({ department: 1, status: 1 });
 employeeSchema.index({ email: 1 });
 
-export const Employee = model<IEmployeeDocument>('Employee', employeeSchema);
+export default model<IEmployee>('Employee', employeeSchema);

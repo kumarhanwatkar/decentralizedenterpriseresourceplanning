@@ -1,9 +1,7 @@
-import { Schema, model, Document } from 'mongoose';
-import { IResource, ResourceType, ResourceStatus } from '../types';
+import { Schema, model } from 'mongoose';
+import { IResource } from '../types';
 
-interface IResourceDocument extends IResource, Document {}
-
-const resourceSchema = new Schema<IResourceDocument>(
+const resourceSchema = new Schema<IResource>(
   {
     resourceId: {
       type: String,
@@ -93,4 +91,4 @@ resourceSchema.index({ resourceId: 1 });
 resourceSchema.index({ type: 1, status: 1 });
 resourceSchema.index({ department: 1 });
 
-export const Resource = model<IResourceDocument>('Resource', resourceSchema);
+export default model<IResource>('Resource', resourceSchema);

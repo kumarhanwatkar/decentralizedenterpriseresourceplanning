@@ -91,6 +91,6 @@ router.patch('/blockchain', isAdmin, SettingsController.updateBlockchainNetwork)
  */
 router.patch('/2fa', isAdmin, SettingsController.toggleTwoFactorAuth);
 
-export default router;
+
 
 export default router;
