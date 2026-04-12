@@ -329,11 +329,3 @@ const AIConfigPage: React.FC = () => {
 };
 
 export default AIConfigPage;
-          </ul>
-        </GlassCard>
-      </div>
-    </DashboardLayout>
-  );
-};
-
-export default AIConfigPage;
