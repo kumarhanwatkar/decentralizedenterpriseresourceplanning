@@ -20,7 +20,7 @@ yarn-error.log*
 .env.production.local
 
 # === Build Outputs ===
-dist/
+# dist/  # TEMPORARILY DISABLED for GitHub Pages deployment
 build/
 /backend/dist
 /decentralizedenterpriseresourceplanning/dist
