@@ -7,9 +7,7 @@
     "dev": "nodemon --exec ts-node src/server.ts",
     "build": "tsc",
     "start": "node dist/server.js",
-      "engines": {
-        "node": ">=18"
-      },
+    "seed": "ts-node scripts/seed.ts",
     "test": "jest --detectOpenHandles",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",

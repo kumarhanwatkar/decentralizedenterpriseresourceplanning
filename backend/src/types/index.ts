@@ -202,7 +202,8 @@ export interface IOrganization {
 // Request/Response Types
 export interface LoginRequest {
   walletAddress: string;
-  signedMessage: string;
+  signature: string;
+  message: string;
   timestamp: number;
 }
 

@@ -561,6 +561,7 @@ export const OrganizationProvider: React.FC<{ children: ReactNode }> = ({ childr
         const amounts: { [key in typeof randomType]: number } = {
           payroll: Math.random() * 60 + 40, // 40-100
           yield: Math.random() * 400 + 200, // 200-600
+          transfer: Math.random() * 100 + 50, // 50-150
           fee: Math.random() * 5 + 1, // 1-6
         };
 
