@@ -9,17 +9,89 @@ import {
   CheckCircle,
   Clock,
   TrendingUp,
+  MoreVertical,
   Plus,
   Search,
-  MoreVertical,
 } from 'lucide-react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { NeonButton } from '@/components/ui/NeonButton';
-import { useOrganization } from '@/context/OrganizationContext';
+
+interface Resource {
+  id: string;
+  name: string;
+  type: 'machine' | 'server' | 'equipment';
+  status: 'operational' | 'maintenance' | 'offline';
+  utilization: number;
+  department: string;
+  lastMaintenance: string;
+  efficiency: number;
+}
+
+const resources: Resource[] = [
+  {
+    id: '1',
+    name: 'CNC Machine A1',
+    type: 'machine',
+    status: 'operational',
+    utilization: 87,
+    department: 'Manufacturing',
+    lastMaintenance: '2025-01-15',
+    efficiency: 94,
+  },
+  {
+    id: '2',
+    name: 'CNC Machine A2',
+    type: 'machine',
+    status: 'operational',
+    utilization: 92,
+    department: 'Manufacturing',
+    lastMaintenance: '2025-01-20',
+    efficiency: 91,
+  },
+  {
+    id: '3',
+    name: 'Lathe Machine B1',
+    type: 'machine',
+    status: 'maintenance',
+    utilization: 0,
+    department: 'Manufacturing',
+    lastMaintenance: '2025-02-01',
+    efficiency: 88,
+  },
+  {
+    id: '4',
+    name: 'Production Server',
+    type: 'server',
+    status: 'operational',
+    utilization: 65,
+    department: 'IT',
+    lastMaintenance: '2025-01-25',
+    efficiency: 99,
+  },
+  {
+    id: '5',
+    name: 'Assembly Line Robot',
+    type: 'equipment',
+    status: 'operational',
+    utilization: 78,
+    department: 'Assembly',
+    lastMaintenance: '2025-01-10',
+    efficiency: 96,
+  },
+  {
+    id: '6',
+    name: 'Welding Station W1',
+    type: 'equipment',
+    status: 'offline',
+    utilization: 0,
+    department: 'Fabrication',
+    lastMaintenance: '2024-12-20',
+    efficiency: 82,
+  },
+];
 
 const ResourcesPage: React.FC = () => {
-  const { resources, stats } = useOrganization();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
 
@@ -32,10 +104,9 @@ const ResourcesPage: React.FC = () => {
 
   const operationalCount = resources.filter(r => r.status === 'operational').length;
   const maintenanceCount = resources.filter(r => r.status === 'maintenance').length;
-  const avgUtilization = operationalCount > 0
-    ? Math.round(resources.filter(r => r.status === 'operational')
-        .reduce((sum, r) => sum + r.utilization, 0) / operationalCount)
-    : 0;
+  const offlineCount = resources.filter(r => r.status === 'offline').length;
+  const avgUtilization = Math.round(resources.filter(r => r.status === 'operational')
+    .reduce((sum, r) => sum + r.utilization, 0) / operationalCount);
 
   const getStatusColor = (status: string) => {
     switch (status) {

@@ -1,28 +1,72 @@
 import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
-export const StreamingNumber: React.FC<{ value: number; className?: string; duration?: number }> = ({ value, className, duration = 1 }) => {
-  const [displayValue, setDisplayValue] = useState(0);
+interface StreamingNumberProps {
+  value: number;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+  streaming?: boolean;
+  className?: string;
+  incrementPerSecond?: number;
+}
+
+export const StreamingNumber: React.FC<StreamingNumberProps> = ({
+  value,
+  prefix = '',
+  suffix = '',
+  decimals = 2,
+  streaming = false,
+  className,
+  incrementPerSecond = 0.0001,
+}) => {
+  const [displayValue, setDisplayValue] = useState(value);
 
   useEffect(() => {
-    let animationFrame: number;
-    const startTime = Date.now();
-    const startValue = displayValue;
-    const target = value;
+    if (streaming) {
+      const interval = setInterval(() => {
+        setDisplayValue((prev) => prev + incrementPerSecond);
+      }, 100);
+      return () => clearInterval(interval);
+    } else {
+      setDisplayValue(value);
+    }
+  }, [streaming, value, incrementPerSecond]);
 
-    const animate = () => {
-      const elapsed = (Date.now() - startTime) / 1000;
-      const progress = Math.min(elapsed / duration, 1);
-      const currentValue = startValue + (target - startValue) * progress;
-      setDisplayValue(Math.floor(currentValue));
+  const formattedValue = displayValue.toFixed(decimals);
+  const [intPart, decPart] = formattedValue.split('.');
 
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [value, duration]);
-
-  return <span className={className}>{displayValue}</span>;
+  return (
+    <div className={cn('font-display tabular-nums', className)}>
+      <span>{prefix}</span>
+      <span>{intPart}</span>
+      {decimals > 0 && (
+        <>
+          <span>.</span>
+          <AnimatePresence mode="popLayout">
+            {decPart.split('').map((digit, idx) => (
+              <motion.span
+                key={`${idx}-${digit}`}
+                initial={{ y: -10, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 10, opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                {digit}
+              </motion.span>
+            ))}
+          </AnimatePresence>
+        </>
+      )}
+      <span>{suffix}</span>
+      {streaming && (
+        <motion.span
+          className="ml-2 inline-block w-2 h-2 rounded-full bg-success"
+          animate={{ opacity: [1, 0.3, 1] }}
+          transition={{ duration: 1, repeat: Infinity }}
+        />
+      )}
+    </div>
+  );
 };
