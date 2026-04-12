@@ -25,7 +25,15 @@ export default defineConfig({
     target: 'ES2020',
     minify: 'terser',
     outDir: 'dist',
-    sourcemap: false
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        // Ensure proper chunk naming for production
+        entryFileNames: '[name]-[hash].js',
+        chunkFileNames: '[name]-[hash].js',
+        assetFileNames: '[name]-[hash][extname]'
+      }
+    }
   },
   base: process.env.VITE_BASE_PATH || '/decentralizedenterpriseresourceplanning/',
 })

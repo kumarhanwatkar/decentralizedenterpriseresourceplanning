@@ -36,7 +36,7 @@ export const config = {
   // CORS
   cors: {
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8080',
-    allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:8080').split(','),
+    allowedOrigins: (process.env.ALLOWED_ORIGINS || 'http://localhost:8080,http://localhost:3000').split(',').map(origin => origin.trim()),
   },
 
   // Email

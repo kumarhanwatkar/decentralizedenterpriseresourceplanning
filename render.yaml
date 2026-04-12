@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: erp-backend
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: SERVER_HOST
+        value: 0.0.0.0
+      - key: API_BASE_URL
+        fromService:
+          type: web
+          name: erp-backend
+          property: url
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: REFRESH_TOKEN_SECRET
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://kumarhanwatkar.github.io/decentralizedenterpriseresourceplanning/
+      - key: FRONTEND_URL
+        value: https://kumarhanwatkar.github.io/decentralizedenterpriseresourceplanning/
